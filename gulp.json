@@ -1,0 +1,33 @@
+{
+    "secciones": [
+        "index",
+        "estaciones"
+    ],
+    "core": [
+        "main",
+        "app",
+        "states"
+    ],
+    "libs": [
+        "jquery/dist/jquery.min",
+        "angular/angular.min",
+        "moment/min/moment.min",
+        "angular-ui-router/release/angular-ui-router.min",
+        "angular-growl-v2/build/angular-growl.min",
+        "sweetalert2/dist/sweetalert2.min",
+        "bootstrap/dist/js/bootstrap.min",
+        "angular-block-ui/dist/angular-block-ui.min",
+        "ng-map.min",
+        "typeahead.min",
+        "typeahead-tpls.min",
+        "jquery.validate.min"
+    ],
+    "css": [
+        "lib/angular-growl-v2/build/angular-growl.min",
+        "lib/sweetalert2/dist/sweetalert2.min",
+        "lib/bootstrap/dist/css/bootstrap.min",
+        "lib/font-awesome.min",
+        "css/app"
+    ],
+    "components": []
+}

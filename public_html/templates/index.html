@@ -1,0 +1,13 @@
+<div class="content">
+	<div class="col-md-12">
+		<div class="col-md-8 col-md-offset-2">
+				<button class="btn btn-block btn-lg" ng-class="ctrl.colors[{{$index}}]" ng-repeat="linea in subtes" ui-sref="app.linea({indexLinea:{{$index}}})">
+				<p>Linea {{linea.nombre_corto}}</p>
+				<p>Estado: {{linea.estado.estado}}</p>
+				<p ng-if="linea.estado.mensaje != ''">{{linea.estado.mensaje}}</p>
+				<p>Frecuencia: {{linea.estado.frecuencia}}</p>
+				</button>
+		</div>
+	</div>
+</div>
+

@@ -1,0 +1,38 @@
+<div class="content">
+	<div class="col-md-12">
+		<div class="col-md-4 col-md-offset-4">
+			<p>Linea {{ctrl.linea.nombre_corto}}</p>
+				<p>Estado: {{ctrl.linea.estado.estado}}</p>
+				<p ng-if="ctrl.linea.estado.mensaje != ''">{{ctrl.linea.estado.mensaje}}</p>
+				<p>Frecuencia: {{ctrl.linea.estado.frecuencia}}</p>
+		</div>
+	</div>
+	<div class="col-md-12">
+		<div class="col-md-8 col-md-offset-2">
+			<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+				<div ng-repeat="est in ctrl.linea.estaciones" ng-show="est.parada_id" class="form-group">
+							<button class="btn btn-primary btn-block " ng-click="ctrl.searchEstacion($index,ctrl.linea.ramales,true)" role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="false" aria-controls="collapseOne">
+								{{est.estacion}}
+							</button>
+					<div id="collapse{{$index}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+						<div class="panel-body">
+							<div ng-if="!est.proximosServicios[0][0]">
+								Tiempo estimado de espera: {{ctrl.linea.estado.frecuencia}}
+							</div>
+							<div ng-if="est.proximosServicios[0][0]">
+								<p>Proximo a {{est.proximosServicios[0][0].ramal}} {{est.proximosServicios[0][0].minutos != 0 ? est.proximosServicios[0][0].minutos+'\'':'Ingresando a estación'}}</p>
+								<p>Proximos: {{est.proximosServicios[0][1].minutos}}' ,{{est.proximosServicios[0][2].minutos}}'</p>
+							</div>
+							<br>
+							<div ng-if="est.proximosServicios[1][0]">
+								<p> Proximo a {{est.proximosServicios[1][0].ramal}} {{est.proximosServicios[1][0].minutos != 0 ? est.proximosServicios[1][0].minutos+'\'':'Ingresando a estación'}}</p>
+								<p>Proximos: {{est.proximosServicios[1][1].minutos}}' ,{{est.proximosServicios[1][2].minutos}}'</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
