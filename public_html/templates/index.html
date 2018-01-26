@@ -1,12 +1,15 @@
 <div class="content">
 	<div class="col-md-12">
 		<div class="col-md-8 col-md-offset-2">
-				<button class="btn btn-block btn-lg" ng-class="ctrl.colors[{{$index}}]" ng-repeat="linea in subtes" ui-sref="app.linea({indexLinea:{{$index}}})">
-				<p>Linea {{linea.nombre_corto}}</p>
-				<p>Estado: {{linea.estado.estado}}</p>
-				<p ng-if="linea.estado.mensaje != ''">{{linea.estado.mensaje}}</p>
-				<p>Frecuencia: {{linea.estado.frecuencia}}</p>
+			<button class="btn btn-block btn-lg btn-primary">
+				<p>{{ctrl.last.xmr}} XMR</p>
+				<p>{{ctrl.last.date | date:'yyyy-MM-dd HH:mm:ss'}}</p>
+				<p>usd {{ctrl.last.value*ctrl.last.xmr | currency}} - valor {{ctrl.last.value | currency}}</p>
 				</button>
+				<br>
+				<ul>
+					<li ng-repeat="i in ctrl.data">{{i.xmr}} XMR - {{i.date | date:'yyyy-MM-dd HH:mm:ss'}} - usd {{i.value*i.xmr | currency}} - valor {{i.value | currency}}</li>
+				</ul>
 		</div>
 	</div>
 </div>

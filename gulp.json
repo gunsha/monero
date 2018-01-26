@@ -1,7 +1,6 @@
 {
     "secciones": [
-        "index",
-        "estaciones"
+        "index"
     ],
     "core": [
         "main",

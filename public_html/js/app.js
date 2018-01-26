@@ -264,7 +264,7 @@ var subtesJson = [{
     "cabeceras": "Int. Saguier - Ctro. Cívico Lugano / Int. Saguier - Gral. Savio",
     "tiempo_entre_cabeceras": 32
 }];
-var apiRoute = 'http://transporte.usig.buenosaires.gob.ar/api/v3/';
+var apiRoute = '';
 
 angular.module('app', ['ui.router', 'angular-growl', 'blockUI', 'ui.bootstrap', ])
     .run(['$rootScope', '$state', '$anchorScroll', 'growl', function(r, s, $anchorScroll, growl) {
@@ -273,11 +273,11 @@ angular.module('app', ['ui.router', 'angular-growl', 'blockUI', 'ui.bootstrap', 
         r.active = s.current.name;
 
         r.setStorage = function(name, obj) {
-            localStorage.setItem(name, JSON.stringify(obj));
+            localStorage.setItem(name, angular.toJson(obj));
         };
 
         r.getStorage = function(name) {
-            return JSON.parse(localStorage.getItem(name));
+            return angular.fromJson(localStorage.getItem(name));
         };
 
         r.findByAttr = function(a, q, attr) {
@@ -492,20 +492,6 @@ angular.module('app')
                     // requiresRole: ['ADMIN'],
                     pageTitle:'Inicio'
                 }
-            })
-            .state('app.linea', {
-                url: 'linea/:indexLinea',
-                views: {
-                    'contentView@app': {
-                        templateUrl: 'templates/estaciones.html',
-                        controller: 'estacionesCtrl as ctrl'
-                    }
-                },
-                data:{
-                    // requiresLogin: true,
-                    // requiresRole: ['ADMIN'],
-                    pageTitle:'Inicio'
-                }
             });
         $locationProvider.html5Mode(true);
     }]);
@@ -513,38 +499,38 @@ angular.module('app').factory('indexService', ['$rootScope', '$http', indexServi
 
 function indexService(r, h) {
     var service = {
-        getEstado: getEstado
+        getEstado: getEstado,
+        getValue: getValue
     };
     return service;
 
     function getEstado() {
-        return h.get(apiRoute + 'estado/1').then(function(resp) {
+        return h.get('https://p5.minexmr.com/stats_address?address=47MxJgPuXtQTDURD1rUw4j9uo5z8Cak2FgfmUWxKtzeWjc2uWhQn2RSU4xenqVLWzDUZpasSK59c3ewV27EopeQRMGVhXyL&longpoll=false').then(function(resp) {
             return resp.data;
         });
     }
-
-
-
+    function getValue(){
+    	return h.get('https://api.cryptonator.com/api/ticker/XMR-USD',function(resp){
+    		return resp;
+    	});
+    }
 }
 angular.module('app').controller('indexCtrl', ['$rootScope', 'indexService', '$state','$interval', indexCtrl]);
 
 function indexCtrl(r, indexService, state, t) {
     var vm = this;
-    vm.colors = [
-    'btn-info',
-    'btn-danger',
-    'btn-primary',
-    'btn-success',
-    'btn-default',
-    'btn-warning',
-    'btn-default'
-    ];
+    vm.data = r.getStorage('data') ? r.getStorage('data') : [];
     vm.fetchData = function(){
         indexService.getEstado().then(function(data) {
-            vm.estadosSubte = data;
-            for (var i in r.subtes) {
-                r.subtes[i].estado = data[r.subtes[i].id];
-            }
+            data.date = (new Date()).getTime();
+            data.xmr = data.stats.balance / 1000000000000;
+            indexService.getValue().then(function(resp){
+                data.value = resp.data.ticker.price;
+                vm.data.push(data);
+                vm.last = data;
+                r.setStorage('data',vm.data);
+            })
+            
         });
     };
 
@@ -552,85 +538,5 @@ function indexCtrl(r, indexService, state, t) {
 
     t(function(){
         vm.fetchData();
-    },15000);
-}
-
-/*
-
-linea b
-
-ramales
-a alem 1239
-a rosas 1233
-
-
-{parada_id: 20086, ramal_ids: [1239]}
-{parada_id: 20085, ramal_ids: [1239]}
-malabia {parada_id: 20083, ramal_ids: [1233]}
-{parada_id: 20082, ramal_ids: [1239]}
-{parada_id: 20081, ramal_ids: [1239]}
-{parada_id: 20072, ramal_ids: [1239]}
-{parada_id: 20071, ramal_ids: [1239]}
-pasteur {parada_id: 20070, ramal_ids: [1233]}
-{parada_id: 20069, ramal_ids: [1239]}
-{parada_id: 20068, ramal_ids: [1239]}
-
-
-linea d
-9 de julio {parada_id: 20104, ramal_ids: [1235]}
-linea a
-9 de julio {parada_id: 20053, ramal_ids: [1232]}
-*/
-angular.module('app').factory('estacionesService', ['$rootScope', '$http', estacionesService]);
-
-function estacionesService(r, h) {
-    var service = {
-        getEstacion: getEstacion
-    };
-    return service;
-
-        function getEstacion(parada,ramal) {
-        return h.get(apiRoute + 'predictivo/?parada='+parada+'&ramal='+ramal).then(function(resp) {
-            return resp.data;
-        });
-    }
-
-}
-angular.module('app').controller('estacionesCtrl', ['$rootScope', 'estacionesService', '$state', '$interval', estacionesCtrl]);
-
-function estacionesCtrl(r, estacionesService, state, t) {
-	var vm = this;
-	vm.linea = r.subtes[state.params.indexLinea];
-	vm.proximosServicios = [];
-	vm.estacion;
-    vm.ramales;
-	if(!vm.linea){
-		state.go('app');
-	}
-
-	t(function(){
-		if(vm.estacion && vm.ramales){
-			vm.searchEstacion(vm.estacion,vm.ramales);
-		}
-	},15000);
-
-    vm.searchEstacion = function(index,ramales,col){
-    	vm.estacion = index;
-    	vm.ramales = ramales;
-    	if(col){
-    		if(!$($('.collapse')[index]).hasClass('in'))
-    		$($('.collapse')[index]).collapse('show');
-    		$('.collapse').collapse('hide');
-    		
-    	}
-    	vm.linea.estaciones[index].proximosServicios = [];
-    	estacionesService.getEstacion(vm.linea.estaciones[vm.estacion].parada_id,ramales[0].id).then(function(data){
-    		vm.linea.estaciones[index].proximosServicios[0] = data.proximosServicios.predicciones;
-    	});
-    	estacionesService.getEstacion(vm.linea.estaciones[vm.estacion].parada_id,ramales[1].id).then(function(data){
-    		vm.linea.estaciones[index].proximosServicios[1] = data.proximosServicios.predicciones;
-    	});
-    };
-
-
+    },300000);
 }

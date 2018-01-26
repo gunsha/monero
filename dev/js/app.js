@@ -1,4 +1,4 @@
-var apiRoute = 'http://transporte.usig.buenosaires.gob.ar/api/v3/';
+var apiRoute = '';
 
 angular.module('app', ['ui.router', 'angular-growl', 'blockUI', 'ui.bootstrap', ])
     .run(['$rootScope', '$state', '$anchorScroll', 'growl', function(r, s, $anchorScroll, growl) {
@@ -7,11 +7,11 @@ angular.module('app', ['ui.router', 'angular-growl', 'blockUI', 'ui.bootstrap', 
         r.active = s.current.name;
 
         r.setStorage = function(name, obj) {
-            localStorage.setItem(name, JSON.stringify(obj));
+            localStorage.setItem(name, angular.toJson(obj));
         };
 
         r.getStorage = function(name) {
-            return JSON.parse(localStorage.getItem(name));
+            return angular.fromJson(localStorage.getItem(name));
         };
 
         r.findByAttr = function(a, q, attr) {

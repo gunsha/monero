@@ -18,20 +18,6 @@ angular.module('app')
                     // requiresRole: ['ADMIN'],
                     pageTitle:'Inicio'
                 }
-            })
-            .state('app.linea', {
-                url: 'linea/:indexLinea',
-                views: {
-                    'contentView@app': {
-                        templateUrl: 'templates/estaciones.html',
-                        controller: 'estacionesCtrl as ctrl'
-                    }
-                },
-                data:{
-                    // requiresLogin: true,
-                    // requiresRole: ['ADMIN'],
-                    pageTitle:'Inicio'
-                }
             });
         $locationProvider.html5Mode(true);
     }]);
