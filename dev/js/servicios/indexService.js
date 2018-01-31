@@ -3,7 +3,8 @@ angular.module('app').factory('indexService', ['$rootScope', '$http', indexServi
 function indexService(r, h) {
     var service = {
         getEstado: getEstado,
-        getValue: getValue
+        getValue: getValue,
+        getEstadoCH:getEstadoCH
     };
     return service;
 
@@ -13,8 +14,13 @@ function indexService(r, h) {
         });
     }
     function getValue(){
-    	return h.get('https://api.cryptonator.com/api/ticker/XMR-USD',function(resp){
+    	return h.get('https://api.coinmarketcap.com/v1/ticker/monero/',function(resp){
     		return resp;
     	});
+    }
+    function getEstadoCH(){
+        return h.get('http://apivimedo.us-east-1.elasticbeanstalk.com/coinhive/stats',function(resp){
+            return resp;
+        });   
     }
 }

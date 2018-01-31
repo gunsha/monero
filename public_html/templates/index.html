@@ -1,15 +1,22 @@
 <div class="content">
 	<div class="col-md-12">
+		<br>
 		<div class="col-md-8 col-md-offset-2">
-			<button class="btn btn-block btn-lg btn-primary">
-				<p>{{ctrl.last.xmr}} XMR</p>
+			<button class="btn btn-block btn-lg btn-primary" ng-click="ctrl.fetchDataCH()">
+				<p>{{ctrl.hashesPerSecond.toFixed(0)}} H/s - {{ctrl.xmrPending.toFixed(5)}} XMR</p>
+				<p>usd {{ctrl.last.value*ctrl.xmrPending | currency}}</p>
+			</button>
+			<br>
+			<button class="btn btn-block btn-lg btn-primary" ng-click="ctrl.fetchData()">
+				<p>{{ctrl.last.xmr.toFixed(5)}} XMR</p>
+				<p>+ {{ctrl.last.xmrDiff.toFixed(5)}} XMR</p>
 				<p>{{ctrl.last.date | date:'yyyy-MM-dd HH:mm:ss'}}</p>
-				<p>usd {{ctrl.last.value*ctrl.last.xmr | currency}} - valor {{ctrl.last.value | currency}}</p>
-				</button>
-				<br>
-				<ul>
-					<li ng-repeat="i in ctrl.data">{{i.xmr}} XMR - {{i.date | date:'yyyy-MM-dd HH:mm:ss'}} - usd {{i.value*i.xmr | currency}} - valor {{i.value | currency}}</li>
-				</ul>
+				<p>usd {{ctrl.last.value*ctrl.last.xmr | currency}} - valor {{ctrl.last.value | currency}} <span ng-if="ctrl.last.valueOld"> (error ws)</span></p>
+			</button>
+			<br>
+			<ul>
+				<li ng-repeat="i in ctrl.data | limitTo:-5 | orderBy:'i.date':true">{{i.xmr}} XMR - {{i.date | date:'yyyy-MM-dd HH:mm:ss'}} - usd {{i.value*i.xmr | currency}} - valor {{i.value | currency}}</li>
+			</ul>
 		</div>
 	</div>
 </div>

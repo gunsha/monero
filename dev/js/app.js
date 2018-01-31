@@ -23,8 +23,6 @@ angular.module('app', ['ui.router', 'angular-growl', 'blockUI', 'ui.bootstrap', 
             })[0];
         };
 
-        r.subtes = subtesJson;
-
         r.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
             r.profile = r.getStorage('profile');
             r.hideNav = false;
@@ -91,6 +89,9 @@ angular.module('app', ['ui.router', 'angular-growl', 'blockUI', 'ui.bootstrap', 
     }])
     .config(['$httpProvider', 'growlProvider', 'blockUIConfig',
         function($httpProvider, growlProvider, blockUIConfig) {
+            $httpProvider.defaults.useXDomain = true;
+            delete $httpProvider.defaults.headers.common['X-Requested-With'];
+
             $httpProvider.interceptors.push('httpInerceptor');
             growlProvider.globalTimeToLive(3000);
             growlProvider.globalDisableCountDown(true);
